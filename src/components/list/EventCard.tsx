@@ -1,4 +1,5 @@
 import { MapPin, Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom'; // IMPORT ADDED
 import type { EventItem } from '../../types/models';
 
 interface EventCardProps {
@@ -7,7 +8,11 @@ interface EventCardProps {
 
 export const EventCard = ({ event }: EventCardProps) => {
   return (
-    <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+    // CHANGED: Outer element is now a Link
+    <Link 
+      to={`/event/${event.slug}`} 
+      className="block bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group hover:border-blue-200"
+    >
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -32,6 +37,6 @@ export const EventCard = ({ event }: EventCardProps) => {
           ${event.priceRange.min}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

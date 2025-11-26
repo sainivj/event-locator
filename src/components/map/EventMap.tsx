@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
+// REMOVED: Unused 'useEffect'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
+// CHANGED: "import * as L" fixes the "no default export" error
+import * as L from 'leaflet'; 
 import { useStore } from '../../store/useStore';
 import 'leaflet/dist/leaflet.css';
 
-// --- LEAFLET ICON FIX ---
-// React-Leaflet + Vite often fails to load default icons correctly.
-// We manually reset the icon URLs to ensure pins appear.
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -20,7 +18,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
-// ------------------------
 
 const EventMap = () => {
   const { filteredEvents } = useStore();
@@ -37,13 +34,11 @@ const EventMap = () => {
         scrollWheelZoom={false} 
         className="h-full w-full"
       >
-        {/* CartoDB Voyager Tile Layer (Clean, Modern Look) */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
 
-        {/* Render Event Markers */}
         {filteredEvents.map((event) => (
           <Marker 
             key={event.id} 
