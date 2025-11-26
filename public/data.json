@@ -1,0 +1,47 @@
+[
+    {
+      "id": "evt_001",
+      "slug": "raptors-vs-celtics-nov-24",
+      "title": "Raptors vs Celtics",
+      "description": "Eastern conference showdown at the Scotiabank Arena.",
+      "venueName": "Scotiabank Arena",
+      "category": "sports",
+      "coordinates": { "lat": 43.6435, "lng": -79.3791 },
+      "date": "2025-11-24T19:00:00Z",
+      "priceRange": { "min": 65, "max": 450, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
+      "tags": ["nba", "basketball"]
+    },
+    {
+      "id": "evt_002",
+      "slug": "jazz-under-stars-2025",
+      "title": "Jazz Under the Stars",
+      "description": "Smooth jazz evening at the historic Distillery District.",
+      "venueName": "Distillery District",
+      "category": "music",
+      "coordinates": { "lat": 43.6503, "lng": -79.3596 },
+      "date": "2025-08-15T20:00:00Z",
+      "priceRange": { "min": 0, "max": 0, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": true },
+      "tags": ["jazz", "music"]
+    },
+    {
+      "id": "evt_003",
+      "slug": "ago-modern-art-exhibit",
+      "title": "Modern Perspectives Exhibit",
+      "description": "Post-modern works from leading Canadian artists.",
+      "venueName": "Art Gallery of Ontario",
+      "category": "arts",
+      "coordinates": { "lat": 43.6536, "lng": -79.3925 },
+      "date": "2025-09-10T10:00:00Z",
+      "priceRange": { "min": 25, "max": 25, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1518998053901-5348d3969105?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": false, "isWheelchairAccessible": true, "hasParking": false },
+      "tags": ["art", "gallery"]
+    }
+  ]

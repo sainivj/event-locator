@@ -1,0 +1,683 @@
+PROJECT FILE TREE
+=================
+
+event-locator/
+    eslint.config.js
+    index.html
+    package.json
+    postcss.config.js
+    README.md
+    tailwind.config.js
+    tsconfig.app.json
+    tsconfig.json
+    tsconfig.node.json
+    vite.config.ts
+    public/
+        data.json
+    src/
+        App.css
+        App.tsx
+        index.css
+        main.tsx
+        assets/
+        components/
+            common/
+            layout/
+            list/
+            map/
+        hooks/
+        pages/
+        services/
+            api.ts
+        store/
+            useStore.ts
+        types/
+            models.ts
+        utils/
+
+================================================================================
+
+
+================================================================================
+FILE: eslint.config.js
+================================================================================
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+  },
+])
+
+
+================================================================================
+FILE: index.html
+================================================================================
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>event-locator</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+
+================================================================================
+FILE: package.json
+================================================================================
+{
+  "name": "event-locator",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.554.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
+    "react-router-dom": "^7.9.6",
+    "tailwind-merge": "^3.4.0",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4"
+  }
+}
+
+
+================================================================================
+FILE: postcss.config.js
+================================================================================
+export default {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  }
+
+================================================================================
+FILE: README.md
+================================================================================
+# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+
+================================================================================
+FILE: tailwind.config.js
+================================================================================
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+================================================================================
+FILE: tsconfig.app.json
+================================================================================
+{
+  "compilerOptions": {
+    /* Critical Fixes */
+    "composite": true,
+    "moduleResolution": "node",
+
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+
+================================================================================
+FILE: tsconfig.json
+================================================================================
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+
+
+================================================================================
+FILE: tsconfig.node.json
+================================================================================
+{
+  "compilerOptions": {
+    /* Critical Fixes */
+    "composite": true,
+    "moduleResolution": "node",
+
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts"]
+}
+
+================================================================================
+FILE: vite.config.ts
+================================================================================
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+
+
+================================================================================
+FILE: public\data.json
+================================================================================
+[
+    {
+      "id": "evt_001",
+      "slug": "raptors-vs-celtics-nov-24",
+      "title": "Raptors vs Celtics",
+      "description": "Eastern conference showdown at the Scotiabank Arena.",
+      "venueName": "Scotiabank Arena",
+      "category": "sports",
+      "coordinates": { "lat": 43.6435, "lng": -79.3791 },
+      "date": "2025-11-24T19:00:00Z",
+      "priceRange": { "min": 65, "max": 450, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
+      "tags": ["nba", "basketball"]
+    },
+    {
+      "id": "evt_002",
+      "slug": "jazz-under-stars-2025",
+      "title": "Jazz Under the Stars",
+      "description": "Smooth jazz evening at the historic Distillery District.",
+      "venueName": "Distillery District",
+      "category": "music",
+      "coordinates": { "lat": 43.6503, "lng": -79.3596 },
+      "date": "2025-08-15T20:00:00Z",
+      "priceRange": { "min": 0, "max": 0, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": true },
+      "tags": ["jazz", "music"]
+    },
+    {
+      "id": "evt_003",
+      "slug": "ago-modern-art-exhibit",
+      "title": "Modern Perspectives Exhibit",
+      "description": "Post-modern works from leading Canadian artists.",
+      "venueName": "Art Gallery of Ontario",
+      "category": "arts",
+      "coordinates": { "lat": 43.6536, "lng": -79.3925 },
+      "date": "2025-09-10T10:00:00Z",
+      "priceRange": { "min": 25, "max": 25, "currency": "CAD" },
+      "imageUrl": "https://images.unsplash.com/photo-1518998053901-5348d3969105?auto=format&fit=crop&q=80&w=1000",
+      "status": "upcoming",
+      "metadata": { "isFamilyFriendly": false, "isWheelchairAccessible": true, "hasParking": false },
+      "tags": ["art", "gallery"]
+    }
+  ]
+
+================================================================================
+FILE: src\App.css
+================================================================================
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+================================================================================
+FILE: src\App.tsx
+================================================================================
+import { useEffect } from 'react';
+import { useStore } from './store/useStore';
+import { Loader2, AlertCircle, MapPin, Calendar } from 'lucide-react';
+
+function App() {
+  const { 
+    fetchEvents, 
+    filteredEvents, 
+    isLoading, 
+    error 
+  } = useStore();
+
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
+  // Loading State
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+          <p className="text-gray-600 font-medium">Loading CityPulse Data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error State
+  if (error) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-xl border-l-4 border-red-500 max-w-md">
+          <div className="flex items-center gap-3 mb-2">
+            <AlertCircle className="h-6 w-6 text-red-500" />
+            <h2 className="text-xl font-bold text-gray-800">Error Loading Data</h2>
+          </div>
+          <p className="text-gray-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Success State (Data Visualization)
+  return (
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-3xl mx-auto">
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">System Status: Operational</h1>
+          <p className="text-gray-600">Phase 3 Data Layer Verification</p>
+        </header>
+
+        <div className="bg-white p-4 rounded-lg shadow-sm mb-6 flex justify-between items-center">
+          <span className="font-semibold text-gray-700">Events Retrieved:</span>
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold">
+            {filteredEvents.length} items
+          </span>
+        </div>
+
+        <div className="grid gap-4">
+          {filteredEvents.map(event => (
+            <div key={event.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">{event.title}</h3>
+                  <div className="flex items-center gap-2 text-gray-500 text-sm mt-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>{event.venueName}</span>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs uppercase tracking-wider font-bold rounded">
+                  {event.category}
+                </span>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  {new Date(event.date).toLocaleDateString()}
+                </div>
+                <div className="text-green-600 font-medium">
+                  ${event.priceRange.min} - ${event.priceRange.max} {event.priceRange.currency}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+================================================================================
+FILE: src\index.css
+================================================================================
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+================================================================================
+FILE: src\main.tsx
+================================================================================
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+
+
+================================================================================
+FILE: src\services\api.ts
+================================================================================
+import axios from 'axios';
+// CHANGED: Added 'type' keyword
+import type { EventItem } from '../types/models'; 
+
+const DATA_SOURCE_URL = '/data.json';
+
+export const fetchEventData = async (): Promise<EventItem[]> => {
+  try {
+    const response = await axios.get<EventItem[]>(DATA_SOURCE_URL);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch event data:", error);
+    throw error;
+  }
+};
+
+================================================================================
+FILE: src\store\useStore.ts
+================================================================================
+import { create } from 'zustand';
+// CHANGED: Added 'type' keyword for verbatimModuleSyntax compliance
+import type { EventItem } from '../types/models';
+import { fetchEventData } from '../services/api';
+
+interface StoreState {
+  // State Variables
+  rawEvents: EventItem[];
+  filteredEvents: EventItem[];
+  isLoading: boolean;
+  error: string | null;
+  filterCategory: string;
+  searchQuery: string;
+
+  // Actions
+  fetchEvents: () => Promise<void>;
+  setCategory: (category: string) => void;
+  setSearch: (query: string) => void;
+  
+  // CHANGED: Added this line so TypeScript knows this function exists
+  applyFilters: () => void;
+}
+
+export const useStore = create<StoreState>((set, get) => ({
+  rawEvents: [],
+  filteredEvents: [],
+  isLoading: false,
+  error: null,
+  filterCategory: 'all',
+  searchQuery: '',
+
+  fetchEvents: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const data = await fetchEventData();
+      set({ rawEvents: data, filteredEvents: data, isLoading: false });
+    } catch (err) {
+      set({ error: 'Failed to load events', isLoading: false });
+    }
+  },
+
+  setCategory: (category) => {
+    set({ filterCategory: category });
+    get().applyFilters();
+  },
+
+  setSearch: (query) => {
+    set({ searchQuery: query });
+    get().applyFilters();
+  },
+
+  applyFilters: () => {
+    const { rawEvents, filterCategory, searchQuery } = get();
+    const lowerQuery = searchQuery.toLowerCase();
+
+    const nextEvents = rawEvents.filter(evt => {
+      // 1. Check Category
+      const matchesCategory = filterCategory === 'all' || evt.category === filterCategory;
+      
+      // 2. Check Search (Title or Description)
+      const matchesSearch = 
+        evt.title.toLowerCase().includes(lowerQuery) || 
+        evt.description.toLowerCase().includes(lowerQuery);
+
+      return matchesCategory && matchesSearch;
+    });
+
+    set({ filteredEvents: nextEvents });
+  }
+}));
+
+================================================================================
+FILE: src\types\models.ts
+================================================================================
+export type EventStatus = 'upcoming' | 'cancelled' | 'sold-out';
+
+export interface GeoCoordinates {
+  lat: number;
+  lng: number;
+}
+
+export interface EventMetadata {
+  isFamilyFriendly: boolean;
+  isWheelchairAccessible: boolean;
+  hasParking: boolean;
+}
+
+export interface EventItem {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  venueName: string;
+  category: string;
+  coordinates: GeoCoordinates;
+  date: string;
+  priceRange: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  imageUrl: string;
+  status: EventStatus;
+  metadata: EventMetadata;
+  tags: string[];
+}
