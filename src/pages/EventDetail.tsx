@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { ArrowLeft, MapPin, Calendar, Share2, Navigation } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Share2, Navigation, Globe } from 'lucide-react'; // Added Globe icon
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
-// Fix Leaflet Icons (Same as before)
 import * as L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -24,22 +22,18 @@ export const EventDetail = () => {
   const navigate = useNavigate();
   const { rawEvents, fetchEvents, isLoading } = useStore();
 
-  // 1. Ensure data is loaded (handle refresh)
   useEffect(() => {
     if (rawEvents.length === 0) {
       fetchEvents();
     }
   }, [rawEvents.length, fetchEvents]);
 
-  // 2. Find the event
   const event = rawEvents.find((e) => e.slug === slug);
 
-  // 3. Loading State
   if (isLoading || (rawEvents.length === 0 && !event)) {
     return <div className="p-10 text-center">Loading Details...</div>;
   }
 
-  // 4. Not Found State
   if (!event) {
     return (
       <div className="p-10 text-center">
@@ -53,7 +47,7 @@ export const EventDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Navbar / Back Button */}
+      {/* Navbar */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-20 flex justify-between items-center">
         <button 
           onClick={() => navigate('/')}
@@ -65,7 +59,7 @@ export const EventDetail = () => {
         <span className="text-sm font-bold text-gray-400">CityPulse Event</span>
       </div>
 
-      {/* Hero Image */}
+      {/* Hero */}
       <div className="w-full h-64 md:h-96 relative bg-gray-200">
         <img 
           src={event.imageUrl} 
@@ -74,9 +68,16 @@ export const EventDetail = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-6 left-6 md:left-12 text-white">
-          <span className="px-2 py-1 bg-blue-600 text-xs font-bold uppercase rounded mb-2 inline-block">
-            {event.category}
-          </span>
+          <div className="flex gap-2 mb-2">
+            <span className="px-2 py-1 bg-blue-600 text-xs font-bold uppercase rounded inline-block">
+              {event.category}
+            </span>
+            {event.isOnline && (
+              <span className="px-2 py-1 bg-green-600 text-xs font-bold uppercase rounded inline-block flex items-center gap-1">
+                 <Globe className="h-3 w-3" /> Online Event
+              </span>
+            )}
+          </div>
           <h1 className="text-3xl md:text-5xl font-extrabold shadow-sm">{event.title}</h1>
         </div>
       </div>
@@ -102,23 +103,37 @@ export const EventDetail = () => {
             <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-blue-500" /> Location
             </h3>
-            {/* Mini Map */}
-            <div className="h-48 w-full rounded-lg overflow-hidden border border-gray-200">
-              <MapContainer 
-                center={[event.coordinates.lat, event.coordinates.lng]} 
-                zoom={14} 
-                scrollWheelZoom={false}
-                className="h-full w-full"
-                zoomControl={false}
-              >
-                <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
-                <Marker position={[event.coordinates.lat, event.coordinates.lng]} />
-              </MapContainer>
-            </div>
-            <p className="mt-2 font-medium text-gray-800">{event.venueName}</p>
-            <button className="mt-4 w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-              <Navigation className="h-4 w-4" /> Get Directions
-            </button>
+            
+            {/* Conditional Rendering for Online vs Physical */}
+            {!event.isOnline ? (
+              <>
+                <div className="h-48 w-full rounded-lg overflow-hidden border border-gray-200">
+                  <MapContainer 
+                    // UPDATED: Access via event.location.coordinates
+                    center={[event.location.coordinates.lat, event.location.coordinates.lng]} 
+                    zoom={14} 
+                    scrollWheelZoom={false}
+                    className="h-full w-full"
+                    zoomControl={false}
+                  >
+                    <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+                    <Marker position={[event.location.coordinates.lat, event.location.coordinates.lng]} />
+                  </MapContainer>
+                </div>
+                {/* UPDATED: Access via event.location */}
+                <p className="mt-2 font-medium text-gray-800">{event.location.venueName}</p>
+                <p className="text-sm text-gray-500">{event.location.neighborhood}, {event.location.city}</p>
+                <button className="mt-4 w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                  <Navigation className="h-4 w-4" /> Get Directions
+                </button>
+              </>
+            ) : (
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 text-center">
+                <Globe className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                <p className="font-bold text-gray-900">This is an Online Event</p>
+                <p className="text-sm text-gray-600">Links will be sent after registration</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -141,7 +156,7 @@ export const EventDetail = () => {
             <div className="mb-6">
               <p className="text-sm text-gray-500 mb-1">Ticket Price</p>
               <p className="text-2xl font-bold text-green-600">
-                ${event.priceRange.min} - ${event.priceRange.max}
+                {event.priceRange.min === 0 ? 'Free' : `$${event.priceRange.min}`}
               </p>
             </div>
 
@@ -161,9 +176,12 @@ export const EventDetail = () => {
                 <li className={event.metadata.isWheelchairAccessible ? "text-green-700 flex gap-2" : "text-gray-400 flex gap-2"}>
                   ✓ Wheelchair Accessible
                 </li>
-                <li className={event.metadata.hasParking ? "text-green-700 flex gap-2" : "text-gray-400 flex gap-2"}>
-                  ✓ Parking Available
-                </li>
+                {/* Online events don't really have parking, so we conditionally hide or show */}
+                {!event.isOnline && (
+                  <li className={event.metadata.hasParking ? "text-green-700 flex gap-2" : "text-gray-400 flex gap-2"}>
+                    ✓ Parking Available
+                  </li>
+                )}
               </ul>
             </div>
           </div>

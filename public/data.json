@@ -1,47 +1,112 @@
 [
-    {
-      "id": "evt_001",
-      "slug": "raptors-vs-celtics-nov-24",
-      "title": "Raptors vs Celtics",
-      "description": "Eastern conference showdown at the Scotiabank Arena.",
+  {
+    "id": "evt_001",
+    "slug": "raptors-vs-celtics-nov-24",
+    "title": "Raptors vs Celtics",
+    "description": "Eastern conference showdown at the Scotiabank Arena. Watch the titans clash in this high-stakes game.",
+    "category": "sports",
+    "categoryIcon": "trophy",
+    "location": {
+      "city": "Toronto",
+      "neighborhood": "South Core",
       "venueName": "Scotiabank Arena",
-      "category": "sports",
-      "coordinates": { "lat": 43.6435, "lng": -79.3791 },
-      "date": "2025-11-24T19:00:00Z",
-      "priceRange": { "min": 65, "max": 450, "currency": "CAD" },
-      "imageUrl": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=1000",
-      "status": "upcoming",
-      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
-      "tags": ["nba", "basketball"]
+      "coordinates": { "lat": 43.6435, "lng": -79.3791 }
     },
-    {
-      "id": "evt_002",
-      "slug": "jazz-under-stars-2025",
-      "title": "Jazz Under the Stars",
-      "description": "Smooth jazz evening at the historic Distillery District.",
-      "venueName": "Distillery District",
-      "category": "music",
-      "coordinates": { "lat": 43.6503, "lng": -79.3596 },
-      "date": "2025-08-15T20:00:00Z",
-      "priceRange": { "min": 0, "max": 0, "currency": "CAD" },
-      "imageUrl": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=1000",
-      "status": "upcoming",
-      "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": true },
-      "tags": ["jazz", "music"]
+    "date": "2025-11-24T19:00:00Z",
+    "priceRange": { "min": 65, "max": 450, "currency": "CAD" },
+    "imageUrl": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=1000",
+    "status": "upcoming",
+    "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
+    "tags": ["nba", "basketball", "toronto"],
+    "isOnline": false,
+    "isFeatured": true
+  },
+  {
+    "id": "evt_002",
+    "slug": "jazz-under-stars-2025",
+    "title": "Jazz Under the Stars",
+    "description": "Smooth jazz evening at the historic Distillery District. Featuring the local quartet 'Midnight Blue'.",
+    "category": "music",
+    "categoryIcon": "music",
+    "location": {
+      "city": "Toronto",
+      "neighborhood": "Distillery District",
+      "venueName": "Distillery District Main Stage",
+      "coordinates": { "lat": 43.6503, "lng": -79.3596 }
     },
-    {
-      "id": "evt_003",
-      "slug": "ago-modern-art-exhibit",
-      "title": "Modern Perspectives Exhibit",
-      "description": "Post-modern works from leading Canadian artists.",
+    "date": "2025-08-15T20:00:00Z",
+    "priceRange": { "min": 0, "max": 0, "currency": "CAD" },
+    "imageUrl": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=1000",
+    "status": "upcoming",
+    "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": true },
+    "tags": ["jazz", "music", "outdoor"],
+    "isOnline": false,
+    "isFeatured": false
+  },
+  {
+    "id": "evt_003",
+    "slug": "ago-modern-art-exhibit",
+    "title": "Modern Perspectives Exhibit",
+    "description": "Post-modern works from leading Canadian artists exploring the intersection of technology and nature.",
+    "category": "arts",
+    "categoryIcon": "palette",
+    "location": {
+      "city": "Toronto",
+      "neighborhood": "Grange Park",
       "venueName": "Art Gallery of Ontario",
-      "category": "arts",
-      "coordinates": { "lat": 43.6536, "lng": -79.3925 },
-      "date": "2025-09-10T10:00:00Z",
-      "priceRange": { "min": 25, "max": 25, "currency": "CAD" },
-      "imageUrl": "https://images.unsplash.com/photo-1518998053901-5348d3969105?auto=format&fit=crop&q=80&w=1000",
-      "status": "upcoming",
-      "metadata": { "isFamilyFriendly": false, "isWheelchairAccessible": true, "hasParking": false },
-      "tags": ["art", "gallery"]
-    }
-  ]
+      "coordinates": { "lat": 43.6536, "lng": -79.3925 }
+    },
+    "date": "2025-09-10T10:00:00Z",
+    "priceRange": { "min": 25, "max": 25, "currency": "CAD" },
+    "imageUrl": "https://images.unsplash.com/photo-1518998053901-5348d3969105?auto=format&fit=crop&q=80&w=1000",
+    "status": "upcoming",
+    "metadata": { "isFamilyFriendly": false, "isWheelchairAccessible": true, "hasParking": false },
+    "tags": ["art", "gallery", "culture"],
+    "isOnline": false,
+    "isFeatured": false
+  },
+  {
+    "id": "evt_004",
+    "slug": "virtual-react-summit",
+    "title": "Global React Summit 2025",
+    "description": "Join thousands of developers online for the biggest React conference of the year.",
+    "category": "tech",
+    "categoryIcon": "code",
+    "location": {
+      "city": "Online",
+      "neighborhood": "Global",
+      "venueName": "StreamYard",
+      "coordinates": { "lat": 0, "lng": 0 }
+    },
+    "date": "2025-10-05T14:00:00Z",
+    "priceRange": { "min": 0, "max": 100, "currency": "USD" },
+    "imageUrl": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=1000",
+    "status": "upcoming",
+    "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
+    "tags": ["react", "coding", "web"],
+    "isOnline": true,
+    "isFeatured": false
+  },
+  {
+    "id": "evt_005",
+    "slug": "digital-marketing-masterclass",
+    "title": "Digital Marketing Masterclass",
+    "description": "Learn SEO and Social Media strategies from top industry experts in this intensive webinar.",
+    "category": "business",
+    "categoryIcon": "briefcase",
+    "location": {
+      "city": "Online",
+      "neighborhood": "Global",
+      "venueName": "Zoom",
+      "coordinates": { "lat": 0, "lng": 0 }
+    },
+    "date": "2025-11-12T18:00:00Z",
+    "priceRange": { "min": 49, "max": 49, "currency": "CAD" },
+    "imageUrl": "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000",
+    "status": "upcoming",
+    "metadata": { "isFamilyFriendly": true, "isWheelchairAccessible": true, "hasParking": false },
+    "tags": ["marketing", "business", "workshop"],
+    "isOnline": true,
+    "isFeatured": false
+  }
+]
