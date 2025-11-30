@@ -3,116 +3,113 @@ import type { EventItem } from '../types/models';
 import { fetchEventData } from '../services/api';
 
 interface StoreState {
-  // State Variables
+  // Existing Data State...
   rawEvents: EventItem[];
   filteredEvents: EventItem[];
   isLoading: boolean;
   error: string | null;
   
-  // Filters
+  // Existing Filter State...
   filterCategory: string;
-  searchQuery: string;       // "The What" (Keywords)
-  filterLocation: string;    // "The Where" (Specific Neighborhood or City)
+  searchQuery: string;       
+  filterLocation: string;    
 
-  // Actions
+  // NEW: UI State for Mobile
+  isMobileSearchOpen: boolean; 
+
+  // Actions...
   fetchEvents: () => Promise<void>;
   setCategory: (category: string) => void;
   setSearch: (query: string) => void;
-  setLocationFilter: (location: string) => void; // New Action
+  setLocationFilter: (location: string) => void;
   clearFilters: () => void;
-  applyFilters: () => void;
+  applyFilters: (overrides?: { query?: string; location?: string; category?: string }) => void;
   
-  // Selectors
+  // NEW: UI Action
+  setMobileSearchOpen: (isOpen: boolean) => void;
+
   getUniqueLocations: () => { city: string; neighborhood: string }[];
 }
 
 export const useStore = create<StoreState>((set, get) => ({
+  // ... Keep all existing initial state ...
   rawEvents: [],
   filteredEvents: [],
   isLoading: false,
   error: null,
-  
   filterCategory: 'all',
   searchQuery: '',
-  filterLocation: '', // Empty string means "Everywhere"
+  filterLocation: '',
+  
+  // NEW INITIAL STATE
+  isMobileSearchOpen: false,
 
+  // ... Keep all existing actions (fetchEvents, setCategory, etc.) ...
   fetchEvents: async () => {
     set({ isLoading: true, error: null });
     try {
       const data = await fetchEventData();
       set({ rawEvents: data, filteredEvents: data, isLoading: false });
     } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       set({ error: 'Failed to load events', isLoading: false });
     }
   },
 
   setCategory: (category) => {
     set({ filterCategory: category });
-    get().applyFilters();
+    get().applyFilters({ category });
   },
 
   setSearch: (query) => {
     set({ searchQuery: query });
-    get().applyFilters();
+    get().applyFilters({ query });
   },
 
   setLocationFilter: (location) => {
     set({ filterLocation: location });
-    get().applyFilters();
+    get().applyFilters({ location });
   },
 
   clearFilters: () => {
-    set({ 
-      filterCategory: 'all', 
-      searchQuery: '', 
-      filterLocation: '' 
-    });
-    get().applyFilters();
+    set({ filterCategory: 'all', searchQuery: '', filterLocation: '' });
+    get().applyFilters({ query: '', location: '', category: 'all' });
   },
 
-  applyFilters: () => {
-    const { rawEvents, filterCategory, searchQuery, filterLocation } = get();
-    const lowerQuery = searchQuery.toLowerCase();
-    const lowerLocation = filterLocation.toLowerCase();
+  applyFilters: (overrides = {}) => {
+    // ... (Keep existing logic exactly as is) ...
+    const state = get();
+    const currentCategory = overrides.category !== undefined ? overrides.category : state.filterCategory;
+    const currentQuery = overrides.query !== undefined ? overrides.query : state.searchQuery;
+    const currentLocation = overrides.location !== undefined ? overrides.location : state.filterLocation;
 
-    const nextEvents = rawEvents.filter(evt => {
-      // 1. Check Category
-      const matchesCategory = filterCategory === 'all' || evt.category === filterCategory;
-      
-      // 2. Check Keyword (Title or Description)
-      const matchesSearch = 
-        evt.title.toLowerCase().includes(lowerQuery) || 
-        evt.description.toLowerCase().includes(lowerQuery);
+    const lowerQuery = currentQuery.toLowerCase();
+    const lowerLocation = currentLocation.toLowerCase();
 
-      // 3. Check Location (Exact Match on City or Neighborhood)
-      // If filterLocation is empty, we match everything.
-      const matchesLocation = 
-        filterLocation === '' || 
-        evt.location.city.toLowerCase() === lowerLocation || 
-        evt.location.neighborhood.toLowerCase() === lowerLocation;
-
+    const nextEvents = state.rawEvents.filter(evt => {
+      const matchesCategory = currentCategory === 'all' || evt.category === currentCategory;
+      const matchesSearch = evt.title.toLowerCase().includes(lowerQuery) || evt.description.toLowerCase().includes(lowerQuery);
+      const matchesLocation = currentLocation === '' || evt.location.city.toLowerCase() === lowerLocation || evt.location.neighborhood.toLowerCase() === lowerLocation;
       return matchesCategory && matchesSearch && matchesLocation;
     });
 
     set({ filteredEvents: nextEvents });
   },
 
+  // NEW ACTION
+  setMobileSearchOpen: (isOpen) => {
+    set({ isMobileSearchOpen: isOpen });
+  },
+
   getUniqueLocations: () => {
+    // ... (Keep existing logic) ...
     const { rawEvents } = get();
     const locations = new Map<string, { city: string; neighborhood: string }>();
-
     rawEvents.forEach(evt => {
-      // Create a unique key to prevent duplicates
       const key = `${evt.location.city}-${evt.location.neighborhood}`;
       if (!locations.has(key) && !evt.isOnline) {
-        locations.set(key, { 
-          city: evt.location.city, 
-          neighborhood: evt.location.neighborhood 
-        });
+        locations.set(key, { city: evt.location.city, neighborhood: evt.location.neighborhood });
       }
     });
-
     return Array.from(locations.values());
   }
 }));

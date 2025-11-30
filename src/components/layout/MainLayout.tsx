@@ -1,7 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import { DesktopHeader } from './DesktopHeader';
-import { MobileTopBar } from './MobileTopBar'; // IMPORT ADDED
+import { MobileTopBar } from './MobileTopBar';
 import { MobileBottomNav } from './MobileBottomNav';
+import { MobileSearchModal } from '../navigation/MobileSearchModal'; // Import Added
 
 export const MainLayout = () => {
   return (
@@ -9,14 +10,12 @@ export const MainLayout = () => {
       
       {/* Navigation Layer */}
       <DesktopHeader />
-      <MobileTopBar /> {/* ADDED: Only visible on mobile */}
+      <MobileTopBar />
       
-      {/* Main Content Wrapper 
-         - pt-16: Mobile Top Bar height
-         - md:pt-20: Desktop Header height
-         - pb-20: Mobile Bottom Bar height
-         - md:pb-0: No Bottom Bar on Desktop
-      */}
+      {/* Modal - only renders if open */}
+      <MobileSearchModal /> 
+
+      {/* Main Content Wrapper */}
       <main className="pt-16 md:pt-20 pb-20 md:pb-0 min-h-screen">
         <Outlet />
       </main>
