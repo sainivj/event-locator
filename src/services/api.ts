@@ -1,12 +1,11 @@
 import axios from 'axios';
-// CHANGED: Added 'type' keyword
-import type { EventItem } from '../types/models'; 
-
-const DATA_SOURCE_URL = '/data.json';
+import type { EventItem } from '../types/models';
 
 export const fetchEventData = async (): Promise<EventItem[]> => {
   try {
-    const response = await axios.get<EventItem[]>(DATA_SOURCE_URL);
+    // FIX: Append a unique timestamp (?t=...) to the URL.
+    // This forces the browser to bypass its cache and load the latest file.
+    const response = await axios.get<EventItem[]>(`/data.json?t=${Date.now()}`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch event data:", error);
