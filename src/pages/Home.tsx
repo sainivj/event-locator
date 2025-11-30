@@ -3,6 +3,7 @@ import { useStore } from '../store/useStore';
 import { Loader2, AlertCircle, Map as MapIcon, List as ListIcon } from 'lucide-react';
 import EventMap from '../components/map/EventMap';
 import { EventCard } from '../components/list/EventCard';
+// REMOVED: import { DebugButton } ... (This caused the error)
 import clsx from 'clsx'; 
 
 export const Home = () => {
@@ -41,7 +42,6 @@ export const Home = () => {
   }
 
   return (
-    // CHANGED: Removed 'relative' from here to prevent stacking context trapping
     <div className="h-screen flex flex-col bg-gray-100">
       
       {/* Header */}
@@ -58,7 +58,6 @@ export const Home = () => {
       </header>
 
       {/* Main Content: Split View */}
-      {/* CHANGED: Ensure z-index is low (0) so it stays below the button */}
       <div className="flex-1 flex overflow-hidden relative z-0">
         
         {/* Left Side: List View */}
@@ -78,19 +77,16 @@ export const Home = () => {
           "w-full md:w-2/3 bg-gray-200 h-full relative",
           viewMode === 'list' ? 'hidden md:block' : 'block'
         )}>
-           <EventMap />
+           {/* Passing viewMode to trigger the Resize logic in EventMap */}
+           <EventMap activeView={viewMode} />
         </div>
       </div>
 
-      {/* FLOATING ACTION BUTTON - NUCLEAR FIX */}
-      {/* 1. Used inline 'position: fixed' to override any Tailwind quirks.
-          2. set zIndex to 99999.
-          3. Removed 'md:hidden' -> IT SHOULD SHOW ON DESKTOP NOW TOO.
-      */}
+      {/* FLOATING ACTION BUTTON */}
       <div 
         style={{
           position: 'fixed',
-          bottom: '50px', // Raised higher to avoid iPhone Home Bar
+          bottom: '50px',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 99999,
