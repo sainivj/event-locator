@@ -8,16 +8,21 @@ interface StoreState {
   filteredEvents: EventItem[];
   isLoading: boolean;
   error: string | null;
+  
+  // Filters
   filterCategory: string;
-  searchQuery: string;
+  searchQuery: string;       // "The What" (Keywords)
+  filterLocation: string;    // "The Where" (Specific Neighborhood or City)
 
   // Actions
   fetchEvents: () => Promise<void>;
   setCategory: (category: string) => void;
   setSearch: (query: string) => void;
+  setLocationFilter: (location: string) => void; // New Action
+  clearFilters: () => void;
   applyFilters: () => void;
   
-  // New V2 Selectors/Helpers
+  // Selectors
   getUniqueLocations: () => { city: string; neighborhood: string }[];
 }
 
@@ -26,8 +31,10 @@ export const useStore = create<StoreState>((set, get) => ({
   filteredEvents: [],
   isLoading: false,
   error: null,
+  
   filterCategory: 'all',
   searchQuery: '',
+  filterLocation: '', // Empty string means "Everywhere"
 
   fetchEvents: async () => {
     set({ isLoading: true, error: null });
@@ -35,7 +42,7 @@ export const useStore = create<StoreState>((set, get) => ({
       const data = await fetchEventData();
       set({ rawEvents: data, filteredEvents: data, isLoading: false });
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       set({ error: 'Failed to load events', isLoading: false });
     }
   },
@@ -50,28 +57,47 @@ export const useStore = create<StoreState>((set, get) => ({
     get().applyFilters();
   },
 
+  setLocationFilter: (location) => {
+    set({ filterLocation: location });
+    get().applyFilters();
+  },
+
+  clearFilters: () => {
+    set({ 
+      filterCategory: 'all', 
+      searchQuery: '', 
+      filterLocation: '' 
+    });
+    get().applyFilters();
+  },
+
   applyFilters: () => {
-    const { rawEvents, filterCategory, searchQuery } = get();
+    const { rawEvents, filterCategory, searchQuery, filterLocation } = get();
     const lowerQuery = searchQuery.toLowerCase();
+    const lowerLocation = filterLocation.toLowerCase();
 
     const nextEvents = rawEvents.filter(evt => {
       // 1. Check Category
       const matchesCategory = filterCategory === 'all' || evt.category === filterCategory;
       
-      // 2. Check Search (Title, Description, OR City/Neighborhood)
+      // 2. Check Keyword (Title or Description)
       const matchesSearch = 
         evt.title.toLowerCase().includes(lowerQuery) || 
-        evt.description.toLowerCase().includes(lowerQuery) ||
-        evt.location.city.toLowerCase().includes(lowerQuery) ||
-        evt.location.neighborhood.toLowerCase().includes(lowerQuery);
+        evt.description.toLowerCase().includes(lowerQuery);
 
-      return matchesCategory && matchesSearch;
+      // 3. Check Location (Exact Match on City or Neighborhood)
+      // If filterLocation is empty, we match everything.
+      const matchesLocation = 
+        filterLocation === '' || 
+        evt.location.city.toLowerCase() === lowerLocation || 
+        evt.location.neighborhood.toLowerCase() === lowerLocation;
+
+      return matchesCategory && matchesSearch && matchesLocation;
     });
 
     set({ filteredEvents: nextEvents });
   },
 
-  // New Helper for the Typeahead Component
   getUniqueLocations: () => {
     const { rawEvents } = get();
     const locations = new Map<string, { city: string; neighborhood: string }>();
@@ -80,7 +106,6 @@ export const useStore = create<StoreState>((set, get) => ({
       // Create a unique key to prevent duplicates
       const key = `${evt.location.city}-${evt.location.neighborhood}`;
       if (!locations.has(key) && !evt.isOnline) {
-         // Only add physical locations
         locations.set(key, { 
           city: evt.location.city, 
           neighborhood: evt.location.neighborhood 

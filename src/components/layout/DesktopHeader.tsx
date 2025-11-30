@@ -1,6 +1,8 @@
-import { Search, Bell, UserCircle } from 'lucide-react';
-import { Link, NavLink } from 'react-router-dom'; // Changed: Import NavLink for active states
-import { cn } from '../../utils/cn'; // Import cn utility
+import { Bell, UserCircle } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
+import { cn } from '../../utils/cn';
+// CRITICAL IMPORT: This brings in the real input field
+import { Omnibox } from '../navigation/Omnibox';
 
 export const DesktopHeader = () => {
   return (
@@ -15,18 +17,14 @@ export const DesktopHeader = () => {
           <span className="text-xl font-extrabold text-gray-900 tracking-tight">CityPulse</span>
         </Link>
 
-        {/* Omnibox Placeholder */}
-        <div className="flex-1 max-w-2xl relative">
-          <div className="flex items-center w-full bg-gray-100 border border-gray-200 rounded-full px-4 py-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-            <Search className="h-5 w-5 text-gray-500 mr-3" />
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-900">Anywhere</span>
-              <span className="text-xs text-gray-500">Search events, neighborhoods, or categories</span>
-            </div>
-          </div>
+        {/* --- CHANGE IS HERE --- */}
+        {/* We are replacing the static "Anywhere" div with the real Omnibox component */}
+        <div className="flex-1 flex justify-center max-w-2xl">
+          <Omnibox />
         </div>
+        {/* ---------------------- */}
 
-        {/* Right Actions - NOW WITH MAP LINK */}
+        {/* Right Actions */}
         <div className="flex items-center gap-6 flex-shrink-0">
           <NavLink 
             to="/" 
@@ -58,7 +56,7 @@ export const DesktopHeader = () => {
             Saved
           </NavLink>
 
-          <div className="h-6 w-px bg-gray-300 mx-1" /> {/* Divider */}
+          <div className="h-6 w-px bg-gray-300 mx-1" />
 
           <button className="text-gray-600 hover:text-gray-900">
             <Bell className="h-5 w-5" />
